@@ -19,11 +19,14 @@ model Point {
   street       String
   updatedAt    DateTime @db.Date
   userId       String
+  user         User     @relation(fields: [userId], references: [id], name: "UserPoints")
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  email    String @unique
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
   name     String
   password String
+  points   Point[] @relation("UserPoints")
 }
+
