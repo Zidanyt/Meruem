@@ -1,0 +1,17 @@
+npm init -y
+
+npm install express prisma @prisma/client bcrypt jsonwebtoken dotenv
+
+npm install --save-dev nodemon
+
+npm install --save-dev nodemon
+
+npx prisma generate
+
+npx prisma db push
+
+npx nodemon server.js
+
+npm install axios
+
+npm install cors
