@@ -2,7 +2,6 @@ require('dotenv').config();
 const axios = require('axios');
 const express = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 
 const app = express();
@@ -48,9 +47,6 @@ app.post('/register-company', async (req, res) => {
   }
 });
 
-
-
-
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -67,20 +63,14 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const tokenPayload = {
-      id: user.id,
-      email: user.email,
-      isCompany: !!user.cnpj,
-    };
-
-    const token = jwt.sign(tokenPayload, process.env.SECRET, { expiresIn: '1h' });
-
-    res.status(200).json({ message: 'Login successful', token, isCompany: !!user.cnpj });
+    res.status(200).json({ 
+      message: 'Login successful', 
+      user: { id: user.id, email: user.email, isCompany: !!user.cnpj } 
+    });
   } catch (error) {
     res.status(500).json({ error: 'Login failed', details: error.message });
   }
 });
-
 
 app.post('/add-point', async (req, res) => {
   const { name, street, neighborhood, city, email, cnpj } = req.body;
@@ -93,7 +83,7 @@ app.post('/add-point', async (req, res) => {
     }
 
     if (!street || !neighborhood || !city) {
-      return res.status(400).json({ error: 'Street, neighborhood and city are required' });
+      return res.status(400).json({ error: 'Street, neighborhood, and city are required' });
     }
 
     const geoResponse = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
@@ -156,7 +146,6 @@ app.get('/recycling-points', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch recycling points', details: error.message });
   }
 });
-
 
 app.get('/companies', async (req, res) => {
   try {
