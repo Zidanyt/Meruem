@@ -117,10 +117,11 @@ app.post('/add-point', async (req, res) => {
 
     res.status(201).json({ message: 'Point added successfully!', point });
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao adicionar ponto:", error);
     res.status(500).json({ error: 'Failed to add point', details: error.message });
   }
 });
+
 
 app.get('/points', async (req, res) => {
   try {
